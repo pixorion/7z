@@ -1,0 +1,14 @@
+# flask_ip_logger.py — run on a server you control
+from flask import Flask, request, jsonify
+import logging
+app = Flask(__name__)
+logging.basicConfig(filename='visitors.log', level=logging.INFO)
+
+@app.route('/')
+def index():
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    logging.info(f"Visitor IP: {ip} Path:/")
+    return jsonify({"message":"You agreed to share your IP","your_ip": ip})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)
